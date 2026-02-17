@@ -15,6 +15,8 @@
 ######################################
 # target
 ######################################
+SHELL = cmd
+TARGET = LABORATORY
 TARGET_SERIES = STM32F411
 TARGET_VERSION = RE
 
@@ -30,6 +32,7 @@ OPT = -Og
 # paths
 #######################################
 # Build path
+BUILD_DIR = Build
 ifeq ($(TARGET_SERIES)$(TARGET_VERSION), STM32F103C8)
 	BUILD_DIR = build_F103C8
 else ifeq ($(TARGET_SERIES)$(TARGET_VERSION), STM32F103C6)
@@ -47,13 +50,16 @@ else ifeq ($(TARGET_SERIES)$(TARGET_VERSION), STM32F429ZI)
 else ifeq ($(TARGET_SERIES)$(TARGET_VERSION), STM32F446RE)
 	BUILD_DIR = build_F446RE
 endif
+
 ######################################
 # selecting source
 ######################################
 # C sources
 
 ifeq ($(TARGET_SERIES), STM32F103)
-	SYS = CMSIS/Devices/STM32F1xx/Src/system_stm32f1xx.c \ CMSIS/Devices/Src/syscalls.c \ CMSIS/Devices/Src/sysmem.c
+	SYS = CMSIS/Devices/STM32F1xx/Src/system_stm32f1xx.c \
+	      CMSIS/Devices/Src/syscalls.c \
+	      CMSIS/Devices/Src/sysmem.c
 	CMSIS_INC_DEV = CMSIS/Devices/STM32F1xx/Inc
 	CMSIS_INC = CMSIS/Include
 	ifeq ($(TARGET_SERIES)$(TARGET_VERSION), STM32F103C8)
@@ -71,7 +77,9 @@ ifeq ($(TARGET_SERIES), STM32F103)
 	MFPU = NONE
 	TRGT_CFG = stm32f1x
 else ifeq ($(TARGET_SERIES), STM32F407)
-	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \ CMSIS/Devices/Src/syscalls.c \ CMSIS/Devices/Src/sysmem.c
+	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \
+	      CMSIS/Devices/Src/syscalls.c \
+	      CMSIS/Devices/Src/sysmem.c
 	ASM = STMDevices/STM32F407xx/startup_stm32f407xx.s
 	CMSIS_INC_DEV = CMSIS/Devices/STM32F4xx/Inc
 	CMSIS_INC_UNIT = CMSIS/Devices/STM32F4xx/Inc/STM32F407xx
@@ -84,7 +92,9 @@ else ifeq ($(TARGET_SERIES), STM32F407)
 	MFPU = fpv4-sp-d16 
 	TRGT_CFG = stm32f4x
 else ifeq ($(TARGET_SERIES), STM32F411)
-	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \ CMSIS/Devices/Src/syscalls.c \ CMSIS/Devices/Src/sysmem.c
+	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \
+	      CMSIS/Devices/Src/syscalls.c \
+	      CMSIS/Devices/Src/sysmem.c
 	ASM = STMDevices/STM32F411xe/startup_stm32f411xe.s
 	CMSIS_INC_DEV = CMSIS/Devices/STM32F4xx/Inc
 	CMSIS_INC_UNIT = CMSIS/Devices/STM32F4xx/Inc/STM32F411xE
@@ -101,7 +111,9 @@ else ifeq ($(TARGET_SERIES), STM32F411)
 	MFPU = fpv4-sp-d16
 	TRGT_CFG = stm32f4x
 else ifeq ($(TARGET_SERIES), STM32F429)
-	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \ CMSIS/Devices/Src/syscalls.c \ CMSIS/Devices/Src/sysmem.c
+	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \
+	      CMSIS/Devices/Src/syscalls.c \
+	      CMSIS/Devices/Src/sysmem.c
 	ASM = STMDevices/STM32F429xx/startup_stm32f429xx.s
 	CMSIS_INC_DEV = CMSIS/Devices/STM32F4xx/Inc
 	CMSIS_INC_UNIT = CMSIS/Devices/STM32F4xx/Inc/STM32F429xx
@@ -111,10 +123,12 @@ else ifeq ($(TARGET_SERIES), STM32F429)
 	endif
 	DEF = STM32F429xx
 	MCPU = cortex-m4
-	MFPU = fpv4-sp-d16  #"vfpv4-d16"
+	MFPU = fpv4-sp-d16
 	TRGT_CFG = stm32f4x
 else ifeq ($(TARGET_SERIES), STM32F446)
-	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \ CMSIS/Devices/Src/syscalls.c \ CMSIS/Devices/Src/sysmem.c
+	SYS = CMSIS/Devices/STM32F4xx/Src/system_stm32f4xx.c \
+	      CMSIS/Devices/Src/syscalls.c \
+	      CMSIS/Devices/Src/sysmem.c
 	ASM = STMDevices/STM32F446xx/startup_stm32f446xx.s
 	CMSIS_INC_DEV = CMSIS/Devices/STM32F4xx/Inc
 	CMSIS_INC_UNIT = CMSIS/Devices/STM32F4xx/Inc/STM32F446xx
@@ -134,7 +148,7 @@ endif
 # C sources
 C_SOURCES =  \
 $(SYS) \
-Core/Src/main.c \
+Core/Src/main.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -159,7 +173,7 @@ else
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
- 
+
 #######################################
 # CFLAGS
 #######################################
@@ -178,21 +192,21 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
 # macros for gcc
 # AS defines
-AS_DEFS = 
+AS_DEFS =
 
 # C defines
 C_DEFS =  \
--D$(DEF) \
+-D$(DEF)
 
 # AS includes
-AS_INCLUDES = 
+AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
 -I$(CMSIS_INC_DEV) \
 -I$(CMSIS_INC_UNIT) \
 -I$(CMSIS_INC) \
--ICore/Inc \
+-ICore/Inc
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -210,17 +224,14 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = $(LD) -Wl,--no-warn-rwx-segment # "-Wl,--no-warn-rwx-segment" - отключает вывод предупреждения о том,
-#										   # что .elf содержит сегмент LOAD с правами RWX (Read, Write, X)
-#										   # Нужно разбораться с этой проблемой  
-#										   #
+LDSCRIPT = $(LD)
 # libraries
-LIBS = -lc -lm -lnosys 
-LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).map,--cref -Wl,--gc-sections
+LIBS = -lc -lm -lnosys
+LIBDIR =
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) -Wl,--no-warn-rwx-segment $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).elf $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).hex $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).bin 
+all: $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).elf $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).hex $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).bin
 	@echo "==========================================="
 	@echo "|| The build was completed successfully! ||"
 	@echo "==========================================="
@@ -235,7 +246,7 @@ vpath %.c $(sort $(dir $(C_SOURCES)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
@@ -243,26 +254,26 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
-	
+
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+	$(BIN) $< $@
 
 $(BUILD_DIR)/$(TARGET_SERIES)$(TARGET_VERSION).elf: $(OBJECTS) Makefile
 	@echo "---------------------   SIZE   ----------------------"
-	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@  -Wl,--print-memory-usage
-	@echo "" 
+	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@ -Wl,--print-memory-usage
+	@echo ""
 	@$(SZ) $@
-	@echo "-----------------------------------------------------"	
+	@echo "-----------------------------------------------------"
 
 $(BUILD_DIR):
-	@"mkdir" $@
+	@mkdir $@
 
 #######################################
 # clean up
 #######################################
 clean:
-	@"rm" -fR $(BUILD_DIR)
-  
+	@cmd /c rmdir /s /q $(BUILD_DIR) 2>nul
+
 #######################################
 # openocd
 #######################################
